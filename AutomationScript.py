@@ -92,14 +92,14 @@ if __name__ == "__main__":
 		logfile.write("************** Test Summary Report **************** \n")
 		metalog = "************** NPM CACHE CLEAR **************** \t" 
 		retryLoad1("npm cache clear",logfile,metalog)		
-		# metalog = "************** NPM AZURE INSTALL **************** \t" 
-		# retryLoad1("npm install azure -g",logfile,metalog)		
-		# metalog = "************** Azure Help Command **************** \t"
-		# retryLoad1("azure",logfile,metalog)
+		metalog = "************** NPM AZURE INSTALL **************** \t" 
+		retryLoad1("npm install azure -g",logfile,metalog)		
+		metalog = "************** Azure Help Command **************** \t"
+		retryLoad1("azure",logfile,metalog)
 
 		if(config['AD_Login'] == "0"):
 		 metalog = "************** Azure Login **************** \t" 
-		 # retryLoad1("azure login -u "+ config['LOGINUSER'] + " -p " + config['LOGINPASSWORD'] + " --quiet",logfile,metalog)
+		 retryLoad1("azure login -u "+ config['LOGINUSER'] + " -p " + config['LOGINPASSWORD'] + " --quiet",logfile,metalog)
 		else:
 		 metalog = " ************** Azure Account Download ******************* \t"
 		 retryLoad1("azure account download ",logfile,metalog)		
@@ -112,6 +112,13 @@ if __name__ == "__main__":
 
 		metalog = " ************** Azure Service List ******************* \t"
 		retryLoad1("azure service list",logfile,metalog)
+		
+		metalog = "************** Azure Network List ******************* \t"
+		retryLoad1("azure network vnet list",logfile,metalog)
+		metalog = "************** Azure Network Create ******************* \t"
+		retryLoad1("azure network vnet create "+config['NETWORK_NAME'] + " -l "+config['LOCATION'],logfile,metalog)
+		metalog = "************** Azure Network Show ******************* \t"
+		retryLoad1("azure network vnet show "+config['NETWORK_NAME'],logfile,metalog)
 		
 		metalog = " ************** Azure network reserved-ip list ******************* \t"
 		retryLoad1("azure network reserved-ip list",logfile,metalog)
@@ -214,7 +221,6 @@ if __name__ == "__main__":
 		retryLoad1("azure vm endpoint create "+config['VM_NAME']+" 21 23 ",logfile,metalog)
 		
 		metalog = "************** Azure VM End Point Create-Multiple ******************* \t"
-		#retryLoad1("azure vm endpoint create-multiple "+config['VM_NAME']+" "+config['ONLYPP_PUBLICPORT'] + ","+config['PPANDLP_PUBLICPORT'] +":"+config['PPANDLP_LOCALPORT']+","+config['PP_LPANDLBSET_PUBLICPORT'] +":"+config['PP_LPANDLBSET_LOCALPORT']+":"+config['PP_LPANDLBSET_PROTOCOL']+":"+config['PP_LPANDLBSET_ENABLEDIRECTSERVERRETURN']+":"+config['PP_LPANDLBSET_LOADBALANCERSETNAME']+","+config['PP_LP_LBSETANDPROB_PUBLICPORT'] +":"+config['PP_LP_LBSETANDPROB_LOCALPORT']+":"+config['PP_LP_LBSETANDPROB_PROTOCOL']+":"+config['PP_LP_LBSETANDPROB_ENABLEDIRECTSERVERRETURN']+":"+config['PP_LP_LBSETANDPROB_LOADBALANCERSETNAME']+":"+config['PP_LP_LBSETANDPROB_PROBPROTOCOL']+":"+config['PP_LP_LBSETANDPROB_PROBPORT'],logfile,metalog)
 		retryLoad1("azure vm endpoint create-multiple "+config['VM_NAME']+" "+config['ONLYPP_PUBLICPORT'] + "::::::::::::,"+config['PPANDLP_PUBLICPORT'] +":"+config['PPANDLP_LOCALPORT']+":::::::::::,",logfile,metalog)
 		metalog = "************** Azure VM End Point show ******************* \t"
 		retryLoad1("azure vm endpoint show "+config['VM_NAME']+ " tcp-21-23 ",logfile,metalog)
@@ -239,19 +245,95 @@ if __name__ == "__main__":
 		retryLoad1("azure vm shutdown "+config['VM_NAME'],logfile,metalog)
 		metalog = "************** Azure VM Capture ******************* \t"
 		retryLoad1("azure vm capture "+config['VM_NAME']+" "+config['TARGET_IMG_NAME']+ " -t ",logfile,metalog)
+		
+		metalog = "************** Azure static-ip VM Create******************* \t"
+		retryLoad1("azure vm create "+config['STATICIP_VM_NAME']+" "+config['IMAGE_NAME']+" communityUser PassW0rd$ "+" --virtual-network-name "+config['NETWORK_NAME'] + " " + "--affinity-group" +  " " + config['AFFINITY_GRP_NAME'] + " " + " --static-ip "+ " " + config['STATIC_IP_TO_CREATE'],logfile,metalog)
+		metalog = "************** Azure static-ip Set ******************* \t"
+		retryLoad1("azure vm static-ip set "+ config['STATICIP_VM_NAME'] +" "+ config['STATIC_IP_TO_SET'],logfile,metalog)
+		metalog = "************** Azure static-ip Check ******************* \t"
+		retryLoad1("azure network vnet static-ip check "+config['NETWORK_NAME'] + " " + config['STATIC_IP_TO_SET'],logfile,metalog)
+		metalog = "************** Azure static-ip Remove ******************* \t"
+		retryLoad1("azure vm static-ip remove "+config['STATICIP_VM_NAME'],logfile,metalog)
+		metalog = "************** Azure static-ip VM Restart ******************* \t"
+		retryLoad1("azure vm restart "+config['STATICIP_VM_NAME'],logfile,metalog)
+		metalog = "************** Azure static-ip VM Delete ******************* \t"
+ 		retryLoad1("azure vm delete "+config['STATICIP_VM_NAME'] + " -b --quiet ",logfile,metalog)
+		metalog = "************** Azure static-ip Docker VM Delete ******************* \t"
+		retryLoad1("azure vm delete "+config['DOCKER_STATIC_VM_NAME'] + " -b --quiet ",logfile,metalog)
+		
+		
+		metalog = "************** Azure Service Delete ******************* \t"
+		retryLoad1("azure service delete "+config['VM_NAME'] + " --quiet ",logfile,metalog)
+		metalog = "************** Azure VM Create-from ******************* \t"
+		retryLoad1("azure vm create-from "+config['VM_NAME']+" "+config['FILE_PATH'] + " -l " +config['LOCATION'],logfile,metalog)
+		metalog = "************** Azure VM Community Image Create ******************* \t"
+		retryLoad1("azure vm create " + config['VM_COMM_NAME'] + " -o "+config['VM_COMM_IMAGE_NAME']+" -l "+config['LOCATION']+" communityUser PassW0rd$",logfile,metalog)
+		metalog = "************** Azure VM SSHCert Create ******************* \t"
+		retryLoad1("azure vm create " + config['VM_SSH_NAME'] + " " + config['VM_VNET_IMAGE_NAME'] + " communityUser --ssh-cert "+config['CERT_FILE'] + " -e --no-ssh-password -r -l "+config['LOCATION'],logfile,metalog)
+		metalog = "************** Azure VM Comm Delete ******************* \t"
+		retryLoad1("azure vm delete "+config['VM_COMM_NAME'] + " -b --quiet ",logfile,metalog)
+		metalog = "************** Azure VM SSHCert Delete ******************* \t"
+		retryLoad1("azure vm delete "+config['VM_SSH_NAME'] + " -b --quiet",logfile,metalog)
 
-		metalog = "************** Azure Network List ******************* \t"
-		retryLoad1("azure network vnet list",logfile,metalog)
-		metalog = "************** Azure Network Create ******************* \t"
-		retryLoad1("azure network vnet create "+config['NETWORK_NAME'] + " -a "+config['AFFINITY_GRP_NAME'],logfile,metalog)
-		metalog = "************** Azure Network Show ******************* \t"
-		retryLoad1("azure network vnet show "+config['NETWORK_NAME'],logfile,metalog)
+		metalog = "************** Azure VM reserved-ip Create ******************* \t"
+		retryLoad1("azure vm create " + config['VM_RIP_NAME'] + " "+config['IMAGE_NAME']+" "+config['USER_NAME']+" "+config['PASSWORD']+" -l " +config['LOCATION']+" -R " + config['RIPNAME'] + " --ssh",logfile,metalog)
+		metalog = "************** Azure VM reserved-ip Delete ******************* \t"
+		retryLoad1("azure vm delete "+config['VM_RIP_NAME'] + " -b --quiet ",logfile,metalog)	
+		
+		metalog = "************** Azure VM Delete ******************* \t"
+		retryLoad1("azure vm delete "+config['VM_NAME'] + " -b --quiet ",logfile,metalog)
+		metalog = "************** Azure Windows VM Delete ******************* \t"
+		retryLoad1("azure vm delete "+config['VM_WIN_NAME'] + " -b --quiet ",logfile,metalog)
+		metalog = " ************** Azure network reserved-ip delete ******************* \t"
+		retryLoad1("azure network reserved-ip delete " + config['RIPNAME'] +" -q",logfile,metalog)
+		
+		# metalog = "************* Azure VM Disk Upload ******************* \t"
+		# retryLoad1("azure vm disk upload "+config['DISK_UPLOAD_SOURCE_PATH']+" "+config['DISK_UPLOAD_BLOB_URL']+" "+config['STORAGE_ACCOUNT_KEY'],logfile,metalog)		
+
+		metalog = "************* Azure VM Image Delete ******************* \t"
+		retryLoad1("azure vm image delete "+config['VM_IMAGE_NAME'],logfile,metalog)
+		metalog = "************** Azure VM Captured Image Delete ******************* \t"
+		retryLoad1("azure vm image delete "+config['TARGET_IMG_NAME'],logfile,metalog)
+		metalog = "************** Azure VM Disk Delete ******************* \t"
+		retryLoad1("azure vm disk delete "+config['VM_DISK_IMAGE_NAME'],logfile,metalog)
+		
+		
+ 		metalog = "********************** Azure VM Docker Create********************************* \t"	
+ 		retryLoad1("azure vm docker create "+ config['VM_DOCKER_NAME'] + " "+ config['VM_DOCKER_IMG_NAME'] +" "+ config['USER_NAME'] +" "+ config['PASSWORD'] +" -l " +config['LOCATION']+" " + config['CERT_FILE'] + " " + config['VM_DOCKER_PORT'] ,logfile,metalog)
+ 		metalog = "************** Azure VM Docker Delete ******************* \t"
+ 		retryLoad1("azure vm delete "+config['VM_DOCKER_NAME'] + " -b --quiet ",logfile,metalog)
+
+		
 		metalog = "************** Azure VM Create_VNet ******************* \t"
-		retryLoad1("azure vm create " + config['VM_VNET_NAME'] + " " + config['VM_VNET_IMAGE_NAME'] + " communityUser PassW0rd$ --virtual-network-name " + config['NETWORK_NAME'] + " -n vnet_img_vm --affinity-group "+config['AFFINITY_GRP_NAME'],logfile,metalog)
+		retryLoad1("azure vm create " + config['VM_VNET_NAME'] + " " + config['VM_VNET_IMAGE_NAME'] + " communityUser PassW0rd$ --virtual-network-name " + config['NETWORK_NAME'] + " -n vnet_img_vm",logfile,metalog)
 		metalog = "************** Azure VM Create_Size ******************* \t"
 		retryLoad1("azure vm create " + config['VM_SIZE_NAME'] + " " + config['VM_VNET_IMAGE_NAME'] + " communityUser PassW0rd$ -z Small -c -l "+config['LOCATION'],logfile,metalog)
 		metalog = "************** Azure create VM_CUSTOM_DATA ******************* \t"
 		retryLoad1("azure vm create -d " + config['CUSTOM_DATA_FILE'] + " " + config['VM_CUSTOMDATA_NAME'] + " " + config['VM_VNET_IMAGE_NAME'] + " communityUser PassW0rd$ -l "+config['LOCATION'],logfile,metalog)
+		
+		metalog = "************** Azure VM_VNet Delete ******************* \t"
+		retryLoad1("azure vm delete "+config['VM_VNET_NAME'] + " -b --quiet ",logfile,metalog)
+		metalog = "************** Azure vnet_img_vm Delete ******************* \t"
+		retryLoad1("azure vm delete vnet_img_vm -b --quiet ",logfile,metalog)
+		metalog = "************** Azure VM_SIZE Delete ******************* \t"
+		retryLoad1("azure vm delete "+config['VM_SIZE_NAME'] + " -b --quiet ",logfile,metalog)
+		metalog = "************** Azure VM_CUSTOM_DATA Delete ******************* \t"
+		retryLoad1("azure vm delete "+config['VM_CUSTOMDATA_NAME'] + " -b --quiet ",logfile,metalog)
+
+		
+		metalog = " ************** LoadBalancer Vm should create with vnet ******************* \t"
+		retryLoad1("azure vm create " + config['VM_NAME'] + " " + " --virtual-network-name "+ config['NETWORK_NAME'] + " -l " + config['LOCATION'] + " " + config['IMAGE_NAME'] + " " + config['USER_NAME'] + " " + config['PASSWORD'] ,logfile,metalog)		
+		metalog = " ************** LoadBalancer Add ******************* \t"
+		retryLoad1("azure service internal-load-balancer add " + config['VM_NAME'] + " -t " + config['SUBNET'] + " -n " + config['INTERNAL_LB_NAME'] ,logfile,metalog)		
+		metalog = " ************** LoadBalancer List ******************* \t"
+		retryLoad1("azure service internal-load-balancer list " + config['VM_NAME'] ,logfile,metalog)	
+		metalog = " ************** LoadBalancer Set ******************* \t"
+		retryLoad1("azure service internal-load-balancer set " + config['VM_NAME'] + " " + config['INTERNAL_LB_NAME_UPDATE'] + " -t " + config['SUBNET'] + " -a " + config['SUBNETIP'] ,logfile,metalog)		
+		metalog = " ************** LoadBalancer Delete ******************* \t"
+		retryLoad1("azure service internal-load-balancer delete " + config['VM_NAME'] + " -n " + config['INTERNAL_LB_NAME'] + " --quiet " ,logfile,metalog)
+		metalog = "************** Azure LoadBalancer VM Delete ******************* \t"
+		retryLoad1("azure vm delete " + config['VM_NAME'] + " -b --quiet " ,logfile,metalog)
+		
 		
 		# ASM NETWORK NEW COMMANDS Starts
 		# NETWORK NSG Create List Show
@@ -337,6 +419,7 @@ if __name__ == "__main__":
 		retryLoad1("azure network application-gateway list ",logfile,metalog)	
 		metalog = " ************** Azure Network Application-Gateway Show ******************* \t"
 		retryLoad1("azure network application-gateway show " + config['NETWORK_APPLICATION_GATEWAY_NAME']+str(random_no), logfile, metalog)
+		# Commented because Start has an Issue 
 		# metalog = " ************** Azure Network Application-Gateway Start ******************* \t"
 		# retryLoad1("azure network application-gateway start " + config['NETWORK_APPLICATION_GATEWAY_NAME']+str(random_no), logfile, metalog)
 		metalog = " ************** Azure Network Application-Gateway Stop ******************* \t"
@@ -393,9 +476,10 @@ if __name__ == "__main__":
 		metalog = "************** Azure Network Application-Gateway Http-Settings Remove ******************* \t"
 		retryLoad1("azure network application-gateway http-settings remove " + " -w " + config['NETWORK_APPLICATION_GATEWAY_NAME']+str(random_no) + " -n " + config['APPGATE_HTTPSETTINGS_NAME']+str(random_no) + " -q ", logfile, metalog)
 		
-		# # NETWORK Application-Gateway frontend-ip Remove
-		# metalog = "************** Azure Network Application-Gateway Frontend-IP Remove ******************* \t"
-		# retryLoad1("azure network application-gateway frontend-ip remove " + " -w " + config['NETWORK_APPLICATION_GATEWAY_NAME']+str(random_no) + " -n " + config['APPGATE_FRONTENDIP_NAME'] + " -q ", logfile, metalog)
+		# # # # Functionality not yet implemented, Issue No. MSOpenTech#293
+		# # # NETWORK Application-Gateway frontend-ip Remove
+		# # metalog = "************** Azure Network Application-Gateway Frontend-IP Remove ******************* \t"
+		# # retryLoad1("azure network application-gateway frontend-ip remove " + " -w " + config['NETWORK_APPLICATION_GATEWAY_NAME']+str(random_no) + " -n " + config['APPGATE_FRONTENDIP_NAME'] + " -q ", logfile, metalog)
 		
 		# NETWORK Application-Gateway frontend-port Remove
 		metalog = "************** Azure Network Application-Gateway Frontend-Port Remove ******************* \t"
@@ -477,89 +561,8 @@ if __name__ == "__main__":
 		metalog = " ************** Azure Network Local-Network Delete ******************* \t"
 		retryLoad1("azure network local-network delete " + config['NETWORK_LOCALNETWORK_NAME'] + " -q " ,logfile,metalog)
 		
-		# #Gateway Command - End Here
-		# # ASM NETWORK NEW COMMANDS ENDS
-		
-		metalog = "************** Azure static-ip VM Create******************* \t"
-		retryLoad1("azure vm create "+config['STATICIP_VM_NAME']+" "+config['IMAGE_NAME']+" communityUser PassW0rd$ "+" --virtual-network-name "+config['NETWORK_NAME'] + " " + "--affinity-group" +  " " + config['AFFINITY_GRP_NAME'] + " " + " --static-ip "+ " " + config['STATIC_IP_TO_CREATE'],logfile,metalog)
-		metalog = "************** Azure static-ip Set ******************* \t"
-		retryLoad1("azure vm static-ip set "+ config['STATICIP_VM_NAME'] +" "+ config['STATIC_IP_TO_SET'],logfile,metalog)
-		metalog = "************** Azure static-ip Check ******************* \t"
-		retryLoad1("azure network vnet static-ip check "+config['NETWORK_NAME'] + " " + config['STATIC_IP_TO_SET'],logfile,metalog)
-		metalog = "************** Azure static-ip Remove ******************* \t"
-		retryLoad1("azure vm static-ip remove "+config['STATICIP_VM_NAME'],logfile,metalog)
-		metalog = "************** Azure static-ip VM Restart ******************* \t"
-		retryLoad1("azure vm restart "+config['STATICIP_VM_NAME'],logfile,metalog)
-		metalog = "************** Azure static-ip VM Delete ******************* \t"
- 		retryLoad1("azure vm delete "+config['STATICIP_VM_NAME'] + " -b --quiet ",logfile,metalog)
-		metalog = "************** Azure static-ip Docker VM Delete ******************* \t"
-		retryLoad1("azure vm delete "+config['DOCKER_STATIC_VM_NAME'] + " -b --quiet ",logfile,metalog)
-		
-		metalog = "************** Azure VM_VNet Delete ******************* \t"
-		retryLoad1("azure vm delete "+config['VM_VNET_NAME'] + " -b --quiet ",logfile,metalog)
-		metalog = "************** Azure vnet_img_vm Delete ******************* \t"
-		retryLoad1("azure vm delete vnet_img_vm -b --quiet ",logfile,metalog)
-		metalog = "************** Azure VM_SIZE Delete ******************* \t"
-		retryLoad1("azure vm delete "+config['VM_SIZE_NAME'] + " -b --quiet ",logfile,metalog)
-		metalog = "************** Azure VM_CUSTOM_DATA Delete ******************* \t"
-		retryLoad1("azure vm delete "+config['VM_CUSTOMDATA_NAME'] + " -b --quiet ",logfile,metalog)
-
-		metalog = "************** Azure Service Delete ******************* \t"
-		retryLoad1("azure service delete "+config['VM_NAME'] + " --quiet ",logfile,metalog)
-		metalog = "************** Azure VM Create-from ******************* \t"
-		retryLoad1("azure vm create-from "+config['VM_NAME']+" "+config['FILE_PATH'] + " -l " +config['LOCATION'],logfile,metalog)
-		metalog = "************** Azure VM Community Image Create ******************* \t"
-		retryLoad1("azure vm create " + config['VM_COMM_NAME'] + " -o "+config['VM_COMM_IMAGE_NAME']+" -l "+config['LOCATION']+" communityUser PassW0rd$",logfile,metalog)
-		metalog = "************** Azure VM SSHCert Create ******************* \t"
-		retryLoad1("azure vm create " + config['VM_SSH_NAME'] + " " + config['VM_VNET_IMAGE_NAME'] + " communityUser --ssh-cert "+config['CERT_FILE'] + " -e --no-ssh-password -r -l "+config['LOCATION'],logfile,metalog)
-		metalog = "************** Azure VM Comm Delete ******************* \t"
-		retryLoad1("azure vm delete "+config['VM_COMM_NAME'] + " -b --quiet ",logfile,metalog)
-		metalog = "************** Azure VM SSHCert Delete ******************* \t"
-		retryLoad1("azure vm delete "+config['VM_SSH_NAME'] + " -b --quiet",logfile,metalog)
-
-		metalog = "************** Azure VM reserved-ip Create ******************* \t"
-		retryLoad1("azure vm create " + config['VM_RIP_NAME'] + " "+config['IMAGE_NAME']+" "+config['USER_NAME']+" "+config['PASSWORD']+" -l " +config['LOCATION']+" -R " + config['RIPNAME'] + " --ssh",logfile,metalog)
-		metalog = "************** Azure VM reserved-ip Delete ******************* \t"
-		retryLoad1("azure vm delete "+config['VM_RIP_NAME'] + " -b --quiet ",logfile,metalog)
-		
-		
-		metalog = "************** Azure VM Delete ******************* \t"
-		retryLoad1("azure vm delete "+config['VM_NAME'] + " -b --quiet ",logfile,metalog)
-		metalog = "************** Azure Windows VM Delete ******************* \t"
-		retryLoad1("azure vm delete "+config['VM_WIN_NAME'] + " -b --quiet ",logfile,metalog)
-		metalog = " ************** Azure network reserved-ip delete ******************* \t"
-		retryLoad1("azure network reserved-ip delete " + config['RIPNAME'] +" -q",logfile,metalog)
-
-		#metalog = "************* Azure VM Disk Upload ******************* \t"
-		metaglog = "azure vm disk upload "+config['DISK_UPLOAD_SOURCE_PATH']+" "+config['DISK_UPLOAD_BLOB_URL']+" "+config['STORAGE_ACCOUNT_KEY'] 
-		#retryLoad1("azure vm disk upload "+config['DISK_UPLOAD_SOURCE_PATH']+" "+config['DISK_UPLOAD_BLOB_URL']+" "+config['STORAGE_ACCOUNT_KEY'],logfile,metalog)		
-
-		metalog = "************* Azure VM Image Delete ******************* \t"
-		retryLoad1("azure vm image delete "+config['VM_IMAGE_NAME'],logfile,metalog)
-		metalog = "************** Azure VM Captured Image Delete ******************* \t"
-		retryLoad1("azure vm image delete "+config['TARGET_IMG_NAME'],logfile,metalog)
-		metalog = "************** Azure VM Disk Delete ******************* \t"
-		retryLoad1("azure vm disk delete "+config['VM_DISK_IMAGE_NAME'],logfile,metalog)
-		
-		
- 		metalog = "********************** Azure VM Docker Create********************************* \t"	
- 		retryLoad1("azure vm docker create "+ config['VM_DOCKER_NAME'] + " "+ config['VM_DOCKER_IMG_NAME'] +" "+ config['USER_NAME'] +" "+ config['PASSWORD'] +" -l " +config['LOCATION']+" " + config['CERT_FILE'] + " " + config['VM_DOCKER_PORT'] ,logfile,metalog)
- 		metalog = "************** Azure VM Docker Delete ******************* \t"
- 		retryLoad1("azure vm delete "+config['VM_DOCKER_NAME'] + " -b --quiet ",logfile,metalog)
-		
-		metalog = " ************** LoadBalancer Vm should create with vnet ******************* \t"
-		retryLoad1("azure vm create " + config['VM_NAME'] + " " + " --virtual-network-name "+ config['NETWORK_NAME'] + " -l " + config['LOCATION'] + " " + config['IMAGE_NAME'] + " " + config['USER_NAME'] + " " + config['PASSWORD'] ,logfile,metalog)		
-		metalog = " ************** LoadBalancer Add ******************* \t"
-		retryLoad1("azure service internal-load-balancer add " + config['VM_NAME'] + " -t " + config['SUBNET'] + " -n " + config['INTERNAL_LB_NAME'] ,logfile,metalog)		
-		metalog = " ************** LoadBalancer List ******************* \t"
-		retryLoad1("azure service internal-load-balancer list " + config['VM_NAME'] ,logfile,metalog)	
-		#metalog = " ************** LoadBalancer Set ******************* \t"
-		metalog = "azure service internal-load-balancer set " + config['VM_NAME'] + config['INTERNAL_LB_NAME_UPDATE'] + " -t " + config['SUBNET'] + " -a " + config['SUBNETIP']
-		#retryLoad1("azure service internal-load-balancer set " + config['VM_NAME'] + config['INTERNAL_LB_NAME_UPDATE'] + " -t " + config['SUBNET'] + " -a " + config['SUBNETIP'] ,logfile,metalog)		
-		metalog = " ************** LoadBalancer Delete ******************* \t"
-		retryLoad1("azure service internal-load-balancer delete " + config['VM_NAME'] + " -n " + config['INTERNAL_LB_NAME'] + " --quiet " ,logfile,metalog)
-		metalog = "************** Azure LoadBalancer VM Delete ******************* \t"
-		retryLoad1("azure vm delete " + config['VM_NAME'] + " -b --quiet " ,logfile,metalog)
+		#Gateway Command - End Here
+		# ASM NETWORK NEW COMMANDS ENDS
 						
 		metalog = "************** Azure Network Delete ******************* \t"
 		retryLoad1("azure network vnet delete "+config['NETWORK_NAME'] + " --quiet ",logfile,metalog)
@@ -908,6 +911,7 @@ if __name__ == "__main__":
 		metalog = "************** Azure Network Application-Gateway Http-Settings Remove ******************* \t"
 		execute_command_with_flag("azure network application-gateway http-settings remove " + " -w " + config['NETWORK_APPLICATION_GATEWAY_NAME']+str(random_no) + " -n " + config['APPGATE_HTTPSETTINGS_NAME']+str(random_no) + " -q ", logfile, config['APPGATE_HTTPSETTINGS_REMOVE_FLAG'], metalog)
 		
+		# # # Functionality not yet implemented, Issue No. MSOpenTech#293
 		# # NETWORK Application-Gateway frontend-ip Remove
 		# metalog = "************** Azure Network Application-Gateway Frontend-IP Remove ******************* \t"
 		# execute_command_with_flag("azure network application-gateway frontend-ip remove " + " -w " + config['NETWORK_APPLICATION_GATEWAY_NAME']+str(random_no) + " -n " + config['APPGATE_FRONTENDIP_NAME'] + " -q ", logfile, config['APPGATE_FRONTEND_REMOVE_FLAG'], metalog)
@@ -928,53 +932,53 @@ if __name__ == "__main__":
 		
 		# NETWORK Vnet & Subnet Create for Gateway Create
 		metalog = " ************** Azure Network Vnet for Gateway create ******************* \t"
-		retryLoad1("azure network vnet create "+config['NETWORK_VPN_VNET_NAME'] + " -e " +config['VPN_VNET_ADDRESS'] + " -i " +config['VPN_VNETCIDR'] + " -p " +config['VPN_VNET_SUBNET_START_IP'] + " -r " +config['VPN_VNET_SUBNET_CIDR'] + " -l " +config['VPN_LOCATION'],logfile,config['VNET_FORGATEWAY_CREATE_FLAG'],metalog)
+		execute_command_with_flag("azure network vnet create "+config['NETWORK_VPN_VNET_NAME'] + " -e " +config['VPN_VNET_ADDRESS'] + " -i " +config['VPN_VNETCIDR'] + " -p " +config['VPN_VNET_SUBNET_START_IP'] + " -r " +config['VPN_VNET_SUBNET_CIDR'] + " -l " +config['VPN_LOCATION'],logfile,config['VNET_FORGATEWAY_CREATE_FLAG'],metalog)
 		metalog = " ************** Azure Network Vnet Subnet for Gateway create ******************* \t"
-		retryLoad1("azure network vnet subnet create " + " -t "+config['NETWORK_VPN_VNET_NAME'] + " -n " +config['NETWORK_VPN_SUBNET_NAME'] + " -a " +config['VPN_SUBNET_ADDRESS'],logfile,config['SUBNET_FORGATEWAY_CREATE_FLAG'],metalog)
+		execute_command_with_flag("azure network vnet subnet create " + " -t "+config['NETWORK_VPN_VNET_NAME'] + " -n " +config['NETWORK_VPN_SUBNET_NAME'] + " -a " +config['VPN_SUBNET_ADDRESS'],logfile,config['SUBNET_FORGATEWAY_CREATE_FLAG'],metalog)
 		
 		# NETWORK LOCAL-NETWORK Create List Show Add
 		metalog = " ************** Azure Network Local-Network Create ******************* \t"
-		retryLoad1("azure network local-network create " + config['NETWORK_LOCALNETWORK_NAME'] + " -a " + config['LOCAL_NETWORK_ADDRESS'] + " -w " + config['VPN_GATEWAY_ADDRESS'], logfile, config['LOCAL_NETWORK_CREATE_FLAG'],metalog)				
+		execute_command_with_flag("azure network local-network create " + config['NETWORK_LOCALNETWORK_NAME'] + " -a " + config['LOCAL_NETWORK_ADDRESS'] + " -w " + config['VPN_GATEWAY_ADDRESS'], logfile, config['LOCAL_NETWORK_CREATE_FLAG'],metalog)				
 		metalog = " ************** Azure Network Local-Network List ******************* \t"
-		retryLoad1("azure network local-network list ",logfile,config['LOCAL_NETWORK_LIST_FLAG'],metalog)	
+		execute_command_with_flag("azure network local-network list ",logfile,config['LOCAL_NETWORK_LIST_FLAG'],metalog)	
 		metalog = " ************** Azure Network Local-Network Show ******************* \t"
-		retryLoad1("azure network local-network show " + " -n " + config['NETWORK_LOCALNETWORK_NAME'], logfile, config['LOCAL_NETWORK_SHOW_FLAG'],metalog)
+		execute_command_with_flag("azure network local-network show " + " -n " + config['NETWORK_LOCALNETWORK_NAME'], logfile, config['LOCAL_NETWORK_SHOW_FLAG'],metalog)
 		metalog = "************** Azure Network Vnet Local-Network Add ******************* \t"
-		retryLoad1("azure network vnet local-network add " + config['NETWORK_VPN_VNET_NAME'] + " " + config['NETWORK_LOCALNETWORK_NAME'], logfile,config['VNET_LOCAL_NETWORK_ADD_FLAG'], metalog)
+		execute_command_with_flag("azure network vnet local-network add " + config['NETWORK_VPN_VNET_NAME'] + " " + config['NETWORK_LOCALNETWORK_NAME'], logfile,config['VNET_LOCAL_NETWORK_ADD_FLAG'], metalog)
 		
 		# NETWORK Vpn Gateway Create Show Shared-Key Set Reset Connection List Vpn-Device List Diagnostics Start Stop & Get Delete
 		metalog = "************** Azure Network Vpn-Gateway Create ******************* \t"
-		retryLoad1("azure network vpn-gateway create " + " -n " +config['NETWORK_VPN_VNET_NAME'] + " -t " +config['VPN_GAETWAY_TYPE'], logfile,config['VPN_GATEWAY_CREATE_FLAG'], metalog)
+		execute_command_with_flag("azure network vpn-gateway create " + " -n " +config['NETWORK_VPN_VNET_NAME'] + " -t " +config['VPN_GAETWAY_TYPE'], logfile,config['VPN_GATEWAY_CREATE_FLAG'], metalog)
 		metalog = "************** Azure Network Vpn-Gateway Show ******************* \t"
-		retryLoad1("azure network vpn-gateway show " + " -n " +config['NETWORK_VPN_VNET_NAME'], logfile,config['VPN_GATEWAY_SHOW_FLAG'], metalog)
+		execute_command_with_flag("azure network vpn-gateway show " + " -n " +config['NETWORK_VPN_VNET_NAME'], logfile,config['VPN_GATEWAY_SHOW_FLAG'], metalog)
 		metalog = "************** Azure Network Vpn-Gateway shared-key set ******************* \t"
-		retryLoad1("azure network vpn-gateway shared-key set " + " -n " +config['NETWORK_VPN_VNET_NAME']+ " -t " +config['NETWORK_LOCALNETWORK_NAME']+ " -k " +config['VPN_KEYVALUE'], logfile, config['VPN_GATEWAY_SHAREDKEY_SET_FLAG'],metalog)
+		execute_command_with_flag("azure network vpn-gateway shared-key set " + " -n " +config['NETWORK_VPN_VNET_NAME']+ " -t " +config['NETWORK_LOCALNETWORK_NAME']+ " -k " +config['VPN_KEYVALUE'], logfile, config['VPN_GATEWAY_SHAREDKEY_SET_FLAG'],metalog)
 		metalog = "************** Azure Network Vpn-Gateway shared-key reset ******************* \t"
-		retryLoad1("azure network vpn-gateway shared-key reset " + " -n " +config['NETWORK_VPN_VNET_NAME']+ " -t " +config['NETWORK_LOCALNETWORK_NAME']+ " -l " +config['VPN_KEYLENGHT'], logfile, config['VPN_GATEWAY_SHAREDKEY_RESET_FLAG'],metalog)
+		execute_command_with_flag("azure network vpn-gateway shared-key reset " + " -n " +config['NETWORK_VPN_VNET_NAME']+ " -t " +config['NETWORK_LOCALNETWORK_NAME']+ " -l " +config['VPN_KEYLENGHT'], logfile, config['VPN_GATEWAY_SHAREDKEY_RESET_FLAG'],metalog)
 		metalog = "************** Azure Network Vpn-Gateway Connection List ******************* \t"
-		retryLoad1("azure network vpn-gateway connection list " + " -n " +config['NETWORK_VPN_VNET_NAME'], logfile,config['VPN_GATEWAY_CONNECTION_LIST_FLAG'], metalog)
+		execute_command_with_flag("azure network vpn-gateway connection list " + " -n " +config['NETWORK_VPN_VNET_NAME'], logfile,config['VPN_GATEWAY_CONNECTION_LIST_FLAG'], metalog)
 		metalog = "************** Azure Network Vpn-Device List ******************* \t"
-		retryLoad1("azure network vpn-gateway device list ", logfile, config['VPN_GATEWAY_DEVICE_LIST_FLAG'],metalog)
+		execute_command_with_flag("azure network vpn-gateway device list ", logfile, config['VPN_GATEWAY_DEVICE_LIST_FLAG'],metalog)
 		metalog = "************** Azure Network Vpn-Gateway Diagnostics Start ******************* \t"
-		retryLoad1("azure network vpn-gateway diagnostics start " +config['NETWORK_VPN_VNET_NAME']+ " -d " +config['VPN_DURATION']+ " -a " +config['VPN_STORAGE']+ " -k " +config['VPN_STORAGE_KEY']+ " -c " +config['VPN_CONTAINER'], logfile, config['VPN_GATEWAY_DIAGNOSTIC_START_FLAG'],metalog)
+		execute_command_with_flag("azure network vpn-gateway diagnostics start " +config['NETWORK_VPN_VNET_NAME']+ " -d " +config['VPN_DURATION']+ " -a " +config['VPN_STORAGE']+ " -k " +config['VPN_STORAGE_KEY']+ " -c " +config['VPN_CONTAINER'], logfile, config['VPN_GATEWAY_DIAGNOSTIC_START_FLAG'],metalog)
 		metalog = "************** Azure Network Vpn-Gateway Diagnostics Stop ******************* \t"
-		retryLoad1("azure network vpn-gateway diagnostics stop " +config['NETWORK_VPN_VNET_NAME'], logfile, config['VPN_GATEWAY_DIAGNOSTIC_STOP_FLAG'],metalog)
+		execute_command_with_flag("azure network vpn-gateway diagnostics stop " +config['NETWORK_VPN_VNET_NAME'], logfile, config['VPN_GATEWAY_DIAGNOSTIC_STOP_FLAG'],metalog)
 		metalog = "************** Azure Network Vpn-Gateway Diagnostics Get ******************* \t"
-		retryLoad1("azure network vpn-gateway diagnostics get " +config['NETWORK_VPN_VNET_NAME'], logfile, config['VPN_GATEWAY_DIAGNOSTIC_GET_FLAG'],metalog)
+		execute_command_with_flag("azure network vpn-gateway diagnostics get " +config['NETWORK_VPN_VNET_NAME'], logfile, config['VPN_GATEWAY_DIAGNOSTIC_GET_FLAG'],metalog)
 		metalog = "************** Azure Network Vpn-Gateway Delete ******************* \t"
-		retryLoad1("azure network vpn-gateway delete " + " -n " +config['NETWORK_VPN_VNET_NAME'] + " -q " , logfile, config['VPN_GATEWAY_DELETE_FLAG'],metalog)
+		execute_command_with_flag("azure network vpn-gateway delete " + " -n " +config['NETWORK_VPN_VNET_NAME'] + " -q " , logfile, config['VPN_GATEWAY_DELETE_FLAG'],metalog)
 		
 		# NETWORK LOCAL-NETWORK Remove 
 		metalog = "************** Azure Network Vnet Local-Network Remove ******************* \t"
-		retryLoad1("azure network vnet local-network remove " + config['NETWORK_VPN_VNET_NAME'] + " " + config['NETWORK_LOCALNETWORK_NAME'], logfile,config['LOCAL_NETWORK_REMOVE_FLAG'], metalog)
+		execute_command_with_flag("azure network vnet local-network remove " + config['NETWORK_VPN_VNET_NAME'] + " " + config['NETWORK_LOCALNETWORK_NAME'], logfile,config['LOCAL_NETWORK_REMOVE_FLAG'], metalog)
 		# NETWORK Vnet for Gateway delete
 		metalog = " ************** Azure Network Vnet for Gateway delete ******************* \t"
-		retryLoad1("azure network vnet delete "+config['NETWORK_VPN_VNET_NAME'] + " --quiet ",logfile,config['VNET_FORGATEWAY_DELETE_FLAG'],metalog)
+		execute_command_with_flag("azure network vnet delete "+config['NETWORK_VPN_VNET_NAME'] + " --quiet ",logfile,config['VNET_FORGATEWAY_DELETE_FLAG'],metalog)
 		# NETWORK LOCAL-NETWORK Set Delete
 		metalog = " ************** Azure Network Local-Network Set ******************* \t"
-		retryLoad1("azure network local-network set " + config['NETWORK_LOCALNETWORK_NAME'] + " -a " + config['LOCAL_NETWORK_ADDRESS_SET'] + " -w " + config['VPN_GATEWAY_ADDRESS_SET'], logfile, config['LOCAL_NETWORK_SET_FLAG'],metalog)
+		execute_command_with_flag("azure network local-network set " + config['NETWORK_LOCALNETWORK_NAME'] + " -a " + config['LOCAL_NETWORK_ADDRESS_SET'] + " -w " + config['VPN_GATEWAY_ADDRESS_SET'], logfile, config['LOCAL_NETWORK_SET_FLAG'],metalog)
 		metalog = " ************** Azure Network Local-Network Delete ******************* \t"
-		retryLoad1("azure network local-network delete " + config['NETWORK_LOCALNETWORK_NAME'] + " -q " ,logfile,config['LOCAL_NETWORK_DELETE_FLAG'],metalog)
+		execute_command_with_flag("azure network local-network delete " + config['NETWORK_LOCALNETWORK_NAME'] + " -q " ,logfile,config['LOCAL_NETWORK_DELETE_FLAG'],metalog)
 		
 		#Gateway Command - End Here
 		
@@ -1016,8 +1020,7 @@ if __name__ == "__main__":
  		metalog = "************** Azure VM Docker Delete ******************* \t"
  		execute_command_with_flag("azure vm delete "+config['VM_DOCKER_NAME'] + " -b --quiet ",logfile,config["VM_DOCKER_DELETE_FLAG"],metalog)
   		metalog = "************** Azure Account Clear ******************* \t"
-		#execute_command_with_flag("azure account clear --quiet",logfile,config['ACCOUNT_CLEAR_FLAG'],metalog)
-		
+		execute_command_with_flag("azure account clear --quiet",logfile,config['ACCOUNT_CLEAR_FLAG'],metalog)
 		
 		metalog = " ************** Loadbalancer Vm should create with vnet ******************* \t"
 		execute_command_with_flag("azure vm create " + config['VM_NAME'] + " " + " --virtual-network-name "+ config['NETWORK_NAME'] + " -l " + config['LOCATION'] + " " + config['IMAGE_NAME'] + " " + config['USER_NAME'] + " " + config['PASSWORD'] ,logfile,config['LOADBALANCER_CREATE_FLAG'],metalog)		

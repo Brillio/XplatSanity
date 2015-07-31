@@ -35,7 +35,7 @@ config = {
 "VM_DOCKER_PORT" : "4113",
 "VM_CUSTOMDATA_NAME" : "XplatCustomdata",
 "LOGINUSER" : "v-sreban@microsoft.com",
-"LOGINPASSWORD" : "T5Sv~8?n",
+"LOGINPASSWORD" : "",
 
 "IMAGE_NAME" :"TEstImage",
 "WIN_IMAGE_NAME" :"VMImage", #diskname is obtained from vm image list and choose the one with windows
@@ -122,7 +122,7 @@ config = {
 #LOADBALANCER
 "SUBNET" : "Subnet-1" ,
 "INTERNAL_LB_NAME" : "internalLBName" ,
-"SUBNETIP" : "subnetip" ,
+"SUBNETIP" : "10.0.1.0" ,
 "INTERNAL_LB_NAME_UPDATE" : "internalLBName" ,
 
 #************** NETWORK VARIABLES *****************
