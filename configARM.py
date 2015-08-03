@@ -9,13 +9,13 @@ configARM = {
 "CUSTOM_DATA_FILE" : "CustomDataFile",
 
 #************** LOGIN VARIABLES *****************
-"LOGINUSER" : "v-tugude@microsoft.com",
+"LOGINUSER" : "",
 "LOGINPASSWORD" : "",
 
 
 #************** ACCOUNT VARIABLES *****************
 
-"SUBSCRIPTION_ID" : "bfb5e0bf-124b-4d0c-9352-7c0a9f4d9948",
+"SUBSCRIPTION_ID" : "",
 "CONFIG_KEY" : "Key",
 "CONFIG_VALUE" : "Value",
 
@@ -81,7 +81,6 @@ configARM = {
 "LB_PROBE_COUNT" : "4",
 "LB_FRONTENDIP_NAME" : "LbFrontIp",
 "LB_ADDPOOL_NAME" : "LbAddPool",
-"LB_ADDPOOL_ID" : "/subscriptions/bfb5e0bf-124b-4d0c-9352-7c0a9f4d9948/resourceGroups/ArmResGrpPython/providers/Microsoft.Network/loadBalancers/NetworkLB/backendAddressPools/LbAddPool" ,
 "LB_RULE_NAME" : "LbRule",
 "LB_RULE_PROTOCOL" : "tcp",
 "LB_RULE_FRONTPORT" : "3381",
@@ -89,8 +88,6 @@ configARM = {
 "LB_RULE_ENABLEFIP" : "false",
 "LB_RULE_IDLETIMEOUT" : "5",
 "LB_INBOUNDNATRULE_NAME" : "LbInboundNatRule",
-"LB_INBOUNDNATRULE_ID" : "/subscriptions/bfb5e0bf-124b-4d0c-9352-7c0a9f4d9948/resourceGroups/ArmResGrpPython/providers/Microsoft.Network/loadBalancers/NetworkLB/inboundNatRules/LbInboundNatRule" ,
-
 
 #************** DNS_ZONE VARIABLES *****************
 "DNS_ZONE_NAME" : "Xplat.testdns" ,
