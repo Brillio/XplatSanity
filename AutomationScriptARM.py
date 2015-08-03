@@ -87,23 +87,26 @@ if __name__ == "__main__":
 	logfile = create_file("" + configARM['LOG_FILE'] + "")
 	logerr = create_file("" + configARM['LOG_FILERR'] + "")
 	if(configARM['GLOBAL_FLAG'] == "1"):
-		# logfile.write("************** Test Summary Report **************** \n")
-		# metalog = "************** NPM CACHE CLEAR **************** \t" 
-		# retryLoad1("npm cache clear",logfile,metalog)		
-		# metalog = "************** NPM AZURE INSTALL **************** \t" 
-		# retryLoad1("npm install azure -g",logfile,metalog)		
-		# metalog = "************** Azure Help Command **************** \t"
-		# retryLoad1("azure",logfile,metalog)
+		logfile.write("************** Test Summary Report **************** \n")
+		metalog = "************** NPM CACHE CLEAR **************** \t" 
+		retryLoad1("npm cache clear",logfile,metalog)		
+		metalog = "************** NPM AZURE INSTALL **************** \t" 
+		retryLoad1("npm install azure -g",logfile,metalog)		
+		metalog = "************** Azure Help Command **************** \t"
+		retryLoad1("azure",logfile,metalog)
 
 		if(configARM['AD_Login'] == "1"):
 		  metalog = "************** Azure Login **************** \t" 
 		  retryLoad1("azure login -u " + configARM['LOGINUSER'] + " -p " + configARM['LOGINPASSWORD']+ " --quiet",logfile,metalog)
+		  metalog = "************** Azure Config Mode ARM **************** \t" 
+		  retryLoad1("azure config mode arm ",logfile,metalog)
 		  
 		else:
 		 metalog = "************** Azure Login **************** \t" 
 		 retryLoad1("azure login -u " + configARM['LOGINUSER'] + " -p " + configARM['LOGINPASSWORD']+ " --quiet",logfile,metalog)
+		 metalog = "************** Azure Config Mode ARM **************** \t" 
+		 retryLoad1("azure config mode arm ",logfile,metalog)
 		 
-
 		 # AZURE RESOURCE GROUP Create		
 		 metalog = " ************** Azure Resource Group Create ******************* \t"
 		 retryLoad1("azure group create " + configARM['GRPNAME'] + " " + configARM['LOCATION'], logfile, metalog)
@@ -220,10 +223,11 @@ if __name__ == "__main__":
 		 # LOADBALANCER Inbound-Nat-Rule Create Set List Delete
 		 metalog = " ************** Azure Network LoadBalancer Inbound-Nat-Rule Create ******************* \t"
 		 retryLoad1("azure network lb inbound-nat-rule create " + configARM['GRPNAME'] + " " + configARM['NETWORK_LB_NAME'] + " " + configARM['LB_INBOUNDNATRULE_NAME'], logfile, metalog) 
-		 metalog = " ************** Azure Network NIC Inbound-Nat-Rule ADD ******************* \t"
-		 retryLoad1("azure network nic inbound-nat-rule add " + configARM['GRPNAME'] + " " + configARM['NETWORK_NIC_NAME'] + " -l " + configARM['NETWORK_LB_NAME'] + " -i " + configARM['LB_INBOUNDNATRULE_ID'], logfile, metalog)
-		 metalog = " ************** Azure Network NIC Inbound-Nat-Rule Remove ******************* \t"
-		 retryLoad1("azure network nic inbound-nat-rule remove " + configARM['GRPNAME'] + " " + configARM['NETWORK_NIC_NAME'] + " -l " + configARM['NETWORK_LB_NAME'] + " -i " + configARM['LB_INBOUNDNATRULE_ID'], logfile, metalog)
+		 # Refer https://github.com/MSOpenTech/azure-xplat-cli/issues/465 
+		 # metalog = " ************** Azure Network NIC Inbound-Nat-Rule ADD ******************* \t"
+		 # retryLoad1("azure network nic inbound-nat-rule add " + configARM['GRPNAME'] + " " + configARM['NETWORK_NIC_NAME'] + " -l " + configARM['NETWORK_LB_NAME'] + " -r " + configARM['LB_INBOUNDNATRULE_NAME'], logfile, metalog)
+		 # metalog = " ************** Azure Network NIC Inbound-Nat-Rule Remove ******************* \t"
+		 # retryLoad1("azure network nic inbound-nat-rule remove " + configARM['GRPNAME'] + " " + configARM['NETWORK_NIC_NAME'] + " -l " + configARM['NETWORK_LB_NAME'] + " -r " + configARM['LB_INBOUNDNATRULE_NAME'], logfile, metalog)
 		 metalog = " ************** Azure Network LoadBalancer Inbound-Nat-Rule Set ******************* \t"
 		 retryLoad1("azure network lb inbound-nat-rule set " + configARM['GRPNAME'] + " " + configARM['NETWORK_LB_NAME'] + " " + configARM['LB_INBOUNDNATRULE_NAME'] + " -i " + configARM['LB_FRONTENDIP_NAME'], logfile, metalog)
 		 metalog = " ************** Azure Network LoadBalancer Inbound-Nat-Rule List ******************* \t"
@@ -234,11 +238,11 @@ if __name__ == "__main__":
 		 # LOADBALANCER Address-Pool Create Add Remove List
 		 metalog = " ************** Azure Network LoadBalancer Address-Pool Create ******************* \t"
 		 retryLoad1("azure network lb address-pool create " + configARM['GRPNAME'] + " " + configARM['NETWORK_LB_NAME'] + " " + configARM['LB_ADDPOOL_NAME'], logfile, metalog) 
-		 
-		 metalog = " ************** Azure Network NIC Address-Pool ADD ******************* \t"
-		 retryLoad1("azure network nic address-pool add " + configARM['GRPNAME'] + " " + configARM['NETWORK_NIC_NAME'] + " -l " + configARM['NETWORK_LB_NAME'] + " -i " + configARM['LB_ADDPOOL_ID'], logfile, metalog)
-		 metalog = " ************** Azure Network NIC Address-Pool Remove ******************* \t"
-		 retryLoad1("azure network nic address-pool remove " + configARM['GRPNAME'] + " " + configARM['NETWORK_NIC_NAME'] + " -l " + configARM['NETWORK_LB_NAME'] + " -i " + configARM['LB_ADDPOOL_ID'], logfile, metalog)
+		 # Refer https://github.com/MSOpenTech/azure-xplat-cli/issues/464
+		 # metalog = " ************** Azure Network NIC Address-Pool ADD ******************* \t"
+		 # retryLoad1("azure network nic address-pool add " + configARM['GRPNAME'] + " " + configARM['NETWORK_NIC_NAME'] + " -l " + configARM['NETWORK_LB_NAME'] + " -a " + configARM['LB_ADDPOOL_NAME'], logfile, metalog)
+		 # metalog = " ************** Azure Network NIC Address-Pool Remove ******************* \t"
+		 # retryLoad1("azure network nic address-pool remove " + configARM['GRPNAME'] + " " + configARM['NETWORK_NIC_NAME'] + " -l " + configARM['NETWORK_LB_NAME'] + " -a " + configARM['LB_ADDPOOL_NAME'], logfile, metalog)
 		 metalog = " ************** Azure Network LoadBalancer Address-Pool List ******************* \t"
 		 retryLoad1("azure network lb address-pool list " + configARM['GRPNAME'] + " " + configARM['NETWORK_LB_NAME'] , logfile, metalog)
 		
@@ -555,10 +559,10 @@ if __name__ == "__main__":
 		 metalog = " ************** Azure Network LoadBalancer Inbound-Nat-Rule Create ******************* \t"
 		 execute_command_with_flag("azure network lb inbound-nat-rule create " + configARM['GRPNAME'] + " " + configARM['NETWORK_LB_NAME'] + " " + configARM['LB_INBOUNDNATRULE_NAME'], logfile, configARM['NETWORKLB_INBOUNDNATRULE_CREATE_FLAG'], metalog)
 		 
-		 metalog = " ************** Azure Network NIC Inbound-Nat-Rule ADD ******************* \t"
-		 retryLoad1("azure network nic inbound-nat-rule add " + configARM['GRPNAME'] + " " + configARM['NETWORK_NIC_NAME'] + " -l " + configARM['NETWORK_LB_NAME'] + " -i " + configARM['LB_INBOUNDNATRULE_ID'], logfile, configARM['NIC_NAT_RULE_ADD_FLAG'], metalog)
-		 metalog = " ************** Azure Network NIC Inbound-Nat-Rule Remove ******************* \t"
-		 retryLoad1("azure network nic inbound-nat-rule remove " + configARM['GRPNAME'] + " " + configARM['NETWORK_NIC_NAME'] + " -l " + configARM['NETWORK_LB_NAME'] + " -i " + configARM['LB_INBOUNDNATRULE_ID'], logfile, configARM['NIC_NAT_RULE_REMOVE_FLAG'], metalog)
+		 # metalog = " ************** Azure Network NIC Inbound-Nat-Rule ADD ******************* \t"
+		 # retryLoad1("azure network nic inbound-nat-rule add " + configARM['GRPNAME'] + " " + configARM['NETWORK_NIC_NAME'] + " -l " + configARM['NETWORK_LB_NAME'] + " -r " + configARM['LB_INBOUNDNATRULE_NAME'], logfile, configARM['NIC_NAT_RULE_ADD_FLAG'], metalog)
+		 # metalog = " ************** Azure Network NIC Inbound-Nat-Rule Remove ******************* \t"
+		 # retryLoad1("azure network nic inbound-nat-rule remove " + configARM['GRPNAME'] + " " + configARM['NETWORK_NIC_NAME'] + " -l " + configARM['NETWORK_LB_NAME'] + " -r " + configARM['LB_INBOUNDNATRULE_NAME'], logfile, configARM['NIC_NAT_RULE_REMOVE_FLAG'], metalog)
 		 metalog = " ************** Azure Network LoadBalancer Inbound-Nat-Rule Set ******************* \t"
 		 execute_command_with_flag("azure network lb inbound-nat-rule set " + configARM['GRPNAME'] + " " + configARM['NETWORK_LB_NAME'] + " " + configARM['LB_INBOUNDNATRULE_NAME'] + " -i " + configARM['LB_FRONTENDIP_NAME'], logfile, configARM['NETWORKLB_INBOUNDNATRULE_SET_FLAG'], metalog)
 		 metalog = " ************** Azure Network LoadBalancer Inbound-Nat-Rule List ******************* \t"
@@ -570,10 +574,10 @@ if __name__ == "__main__":
 		 metalog = " ************** Azure Network LoadBalancer Address-Pool Create ******************* \t"
 		 execute_command_with_flag("azure network lb address-pool create " + configARM['GRPNAME'] + " " + configARM['NETWORK_LB_NAME'] + " " + configARM['LB_ADDPOOL_NAME'], logfile, configARM['NETWORKLB_ADDRESSPOOL_CREATE_FLAG'], metalog) 
 		 
-		 metalog = " ************** Azure Network NIC Address-Pool ADD ******************* \t"
-		 retryLoad1("azure network nic address-pool add " + configARM['GRPNAME'] + " " + configARM['NETWORK_NIC_NAME'] + " -l " + configARM['NETWORK_LB_NAME'] + " -i " + configARM['LB_ADDPOOL_ID'], logfile, configARM['NIC_ADDRESSPOLL_ADD_FLAG'], metalog)
-		 metalog = " ************** Azure Network NIC Address-Pool Remove ******************* \t"
-		 retryLoad1("azure network nic address-pool remove " + configARM['GRPNAME'] + " " + configARM['NETWORK_NIC_NAME'] + " -l " + configARM['NETWORK_LB_NAME'] + " -i " + configARM['LB_ADDPOOL_ID'], logfile, configARM['NIC_ADDRESSPOLL_REMOVE_FLAG'], metalog)
+		 # metalog = " ************** Azure Network NIC Address-Pool ADD ******************* \t"
+		 # retryLoad1("azure network nic address-pool add " + configARM['GRPNAME'] + " " + configARM['NETWORK_NIC_NAME'] + " -l " + configARM['NETWORK_LB_NAME'] + " -a " + configARM['LB_ADDPOOL_NAME'], logfile, configARM['NIC_ADDRESSPOLL_ADD_FLAG'], metalog)
+		 # metalog = " ************** Azure Network NIC Address-Pool Remove ******************* \t"
+		 # retryLoad1("azure network nic address-pool remove " + configARM['GRPNAME'] + " " + configARM['NETWORK_NIC_NAME'] + " -l " + configARM['NETWORK_LB_NAME'] + " -a " + configARM['LB_ADDPOOL_NAME'], logfile, configARM['NIC_ADDRESSPOLL_REMOVE_FLAG'], metalog)
 		 metalog = " ************** Azure Network LoadBalancer Address-Pool List ******************* \t"
 		 execute_command_with_flag("azure network lb address-pool list " + configARM['GRPNAME'] + " " + configARM['NETWORK_LB_NAME'] , logfile, configARM['NETWORKLB_ADDRESSPOOL_LIST_FLAG'], metalog)
 		

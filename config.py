@@ -34,7 +34,7 @@ config = {
 "VM_RIP_NAME" : "XplatRIPVM",
 "VM_DOCKER_PORT" : "4113",
 "VM_CUSTOMDATA_NAME" : "XplatCustomdata",
-"LOGINUSER" : "v-sreban@microsoft.com",
+"LOGINUSER" : "",
 "LOGINPASSWORD" : "",
 
 "IMAGE_NAME" :"TEstImage",
